@@ -1,0 +1,7 @@
+在当前文件夹打开cmd, 先安装依赖 cnpm i 此教程全使用淘宝镜像,需要跑两个服务,一个是node端的,一个是koa端的,如果koa的跑不通,请删除路由index.js中的路由拦截功能.
+
+第一个服务是 npm run dev  
+
+第二个服务是 npm run api   
+
+意思就是需要打开两个cmd  一个 跑npm run dev 一个跑 npm run api
