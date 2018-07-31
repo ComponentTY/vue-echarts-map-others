@@ -16,9 +16,11 @@
   "dependencies": {
     "echarts": "^4.1.0",
     "element-ui": "^2.3.9",
+    "font-awesome": "^4.7.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "mongoose": "^5.2.5",
     "monk": "^6.0.6",
     "vue": "^2.5.2",
     "vue-amap": "^0.5.7",

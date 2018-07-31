@@ -1,0 +1,11 @@
+.el-card{
+  margin-top: 40px;
+}
+.el-input{
+  width:179px;
+}
+.title{
+  color:#000;
+  font-weight: 700;
+  font-size: 20px;
+}

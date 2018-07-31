@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-card>vue-amap vue中的高德地图</el-card>
     <el-amap vid="amapDemo" :zoom="zoom" :amap-manager="amapManager" :center="center" class="amap-demo" :resizeEnable='true' :rotateEnable='true' :keyboardEnable='true' :mapStyle='mapStyle'>
       <el-amap-marker v-for="(marker, index) in markers" :key='index' :position='markers[index]'></el-amap-marker>
     </el-amap>
@@ -11,6 +12,7 @@
 
 <script>
   import { AMapManager } from 'vue-amap'
+  import image from '@/assets/images/ic_locationmarker.png'
   // 应用高德地图的原生sdk :amap-manager="amapManager"
   let amapManager = new AMapManager()
   export default {
@@ -20,26 +22,28 @@
         zoom: 11,
         center: [121.59996, 31.197646],
         markers: [],
+        map: null,
         amapManager,
         mapStyle: 'dark'
       }
     },
     created () {
-      this.location = {"locations":[{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.739269","lat":"31.264564"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"34.139978"},{"lon":"120.224215","lat":"30.197081"},{"lon":"120.224215","lat":"30.209184"},{"lon":"120.224215","lat":"30.209184"}]}
-      let position = []
-      this.location.locations.map(item => {
-        position = [item.lon, item.lat]
-        this.markers.push(position)
-      })
+      this.$store.commit('setActiveMenu', '/map')
     },
     methods: {
       add () {
-        let o = this.amapManager.getMap()
-        console.log(o)
+        // console.log(o)
+        this.map = this.amapManager.getMap()
+        console.log(this.map)
         let marker = new AMap.Marker({
-          position: [121.5996, 31.177646]
+          icon: new AMap.Icon({
+            size: new AMap.Size(36, 44),
+            image: image
+          }),
+          position: [Math.random() * 120, Math.random() * 90]
         })
-        marker.setMap(o)
+        marker.setMap(this.map)
+        this.map.setFitView()
       }
     }
   }

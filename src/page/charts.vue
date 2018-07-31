@@ -2,22 +2,30 @@
 #pie{
 	width:50%;
 	height:400px;
+	margin-top:30px;
+}
+#charts{
+	width:100%;
+	height:700px;
 }
 </style>
 <template>
 <div>
-	<div id="charts" style="height:500px;width:1000px;"></div>
+	<div id="charts"></div>
 	<div id="pie"></div>
 </div>
 </template>
 <script>
-import {searchOption} from '@/utils/chat.js'
+import {setPieOption, setBarOption} from '@/utils/chat.js'
 	export default {
 		data () {
 			return {
 				chart1: null,
 				chart2: null
 			}
+		},
+		created () {
+			this.$store.commit('setActiveMenu', '/charts')
 		},
 		mounted () {
 			// 实例图表,每个容器只能有一个图表实例
@@ -27,148 +35,14 @@ import {searchOption} from '@/utils/chat.js'
 				this.chart1.resize()
 				this.chart2.resize()
 			}
-			var option = {
-				// 表头提示内容
-				title: {
-						text: '动态数据',
-						subtext: '纯属虚构'
-				},
-				// 鼠标放上去提示的内容
-				tooltip: {
-						trigger: 'axis',
-						axisPointer: {
-								type: 'cross',
-								label: {
-										backgroundColor: '#283b56'
-								}
-						}
-				},
-				// 显示头部内容
-				legend: {
-						data:['最新成交价', '预购队列']
-				},
-				// 工具类
-				// toolbox: {
-				// 		show: true,
-				// 		feature: {
-				// 				dataView: {readOnly: false},
-				// 				restore: {},
-				// 				saveAsImage: {}
-				// 		}
-				// },
-				// 移动的距离 true显示下面的滚动条,false不显示
-				dataZoom: {
-						show: true,
-						start: 0,
-						end: 100
-				},
-				// x轴的相关数据
-				xAxis: [
-						{
-								type: 'category',
-								boundaryGap: true,
-								name: '时间',
-								position: 'top',
-								data: (function (){
-										var now = new Date();
-										var res = [];
-										var len = 10;
-										while (len--) {
-												res.unshift(now.toLocaleTimeString().replace(/^\D*/,''));
-												now = new Date(now - 2000);
-										}
-										return res;
-								})()
-						}
-						,
-						{
-								type: 'category',
-								boundaryGap: true,
-								name: '时间戳',
-								data: (function (){
-										var res = [];
-										var len = 10;
-										while (len--) {
-												res.push(10 - len - 1);
-										}
-										return res;
-								})()
-						}
-				],
-				// y轴相关数据
-				yAxis: [
-						{
-								type: 'value',
-								scale: true,
-								name: '价格',
-								max: 30,
-								min: 0,
-								boundaryGap: [0.2, 0.2]
-						},
-						{
-								type: 'value',
-								scale: true,
-								name: '预购量',
-								max: 1200,
-								min: 0,
-								boundaryGap: [0.2, 0.2]
-						}
-				],
-				series: [
-						{
-								name:'预购队列',
-								type:'bar',
-								xAxisIndex: 1,
-								yAxisIndex: 1,
-								data:(function (){
-										var res = [];
-										var len = 10;
-										while (len--) {
-												res.push(Math.round(Math.random() * 1000));
-										}
-										return res;
-								})()
-						},
-						{
-								name:'最新成交价',
-								type:'line',
-								data:(function (){
-										var res = [];
-										var len = 0;
-										while (len < 10) {
-												res.push((Math.random()*10 + 5).toFixed(1) - 0);
-												len++;
-										}
-										return res;
-								})()
-						}
-				]
-		};
-
-			app.count = 11;
-			var that = this
-			setInterval(function (){
-					let axisData = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
-					var data0 = option.series[0].data;
-					var data1 = option.series[1].data;
-					data0.shift();
-					data0.push(Math.round(Math.random() * 1000));
-					data1.shift();
-					data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
-
-					option.xAxis[0].data.shift();
-					option.xAxis[0].data.push(axisData);
-					option.xAxis[1].data.shift();
-					option.xAxis[1].data.push(app.count++);
-					// 给实例绑定option,此处的option是上面定义的option,设置的属性值
-					that.chart1.setOption(option);
-			}, 2100);
 			this.getOption()
 		},
 		methods: {
 			getOption () {
 				let name = '饼状图例子'
-				let option1 = searchOption(1, [50, 100], name)
+				let option1 = setPieOption(1, [50, 100], name)
+				let option2 = setBarOption('里程能耗图表', ['里程', '能耗'], '{a}{b}{c}/n里程', ['里程', '能耗'],)
+				this.chart1.setOption(option2)
 				this.chart2.setOption(option1)
 			}
 		}

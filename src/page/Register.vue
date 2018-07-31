@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-form :model="user" status-icon :rules="rules" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="user.account" auto-complete="off"></el-input>
+            <el-form-item label="用户名" prop="userName">
+                <el-input v-model="user.userName" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
                 <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import {register} from '@/api/load-data.js'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -49,7 +50,7 @@ export default {
     }
     return {
       user: {
-        account: '',
+        userName: '',
         password: '',
         checkPass: ''
       },
@@ -60,7 +61,7 @@ export default {
         checkPass: [
           { validator: validatePass2, trigger: 'blur' }
         ],
-        username: [
+        userName: [
           { validator: validateUserName, trigger: 'blur' }
         ]
       }
@@ -68,21 +69,36 @@ export default {
   },
   methods: {
     submitForm (formName) {
-      this.$refs[formName].validate(async (valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           console.log('success')
-          let parmas = this.user
-          await this.$http.post('/apis/register', parmas).then((res) => {
-            console.log(res.data)
-            res.data.state === 0 ? this.$message.success('注册成功,三秒后自动跳转到登录页面') : this.$message.error('用户名已存在')
-            if (res.data.state === 0) {
+          let {userName, password} = this.user
+          let data = {}
+          data.userName = userName
+          data.password = password
+          // let result = await register(data)
+          // console.log(result)
+          register(data).then(res => {
+            if (res.success) {
+              this.$message.success(res.message + '页面将于三秒后跳转到登录页面')
               setTimeout(() => {
                 this.$router.push('/login')
-              },3000)
+              }, 3000)
             } else {
-              this.$refs[formName].resetFields()
+              this.$message.error(res.message)
             }
           })
+          // await this.$http.post('/apis/login', parmas).then((res) => {
+          //   console.log(res.data)
+          //   res.data.state === 0 ? this.$message.success('注册成功,三秒后自动跳转到登录页面') : this.$message.error('用户名已存在')
+          //   if (res.data.state === 0) {
+          //     setTimeout(() => {
+          //       this.$router.push('/login')
+          //     },3000)
+          //   } else {
+          //     this.$refs[formName].resetFields()
+          //   }
+          // })
         } else {
           console.log('fault')
         }
